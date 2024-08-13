@@ -64,6 +64,7 @@ class SirkoAGN:
         # Auxiliary parameters
         self.eps = eps
         self.X = X
+        self.mgas = ct.mproton/(2*self.X)
         self.debug = debug
         self.xtol = xtol
         self.rootm = rootm
@@ -440,7 +441,7 @@ class SirkoAGN:
         if not self.b:
             rho = Mdotprime * Omega * Omega / (6 * np.pi * self.alpha * cs * cs * cs)
         else:
-            rho = Mdotprime * Omega * Omega * ct.massU / (6 * np.pi * self.alpha * cs * T * ct.Kb)
+            rho = Mdotprime * Omega * Omega * self.mgas / (6 * np.pi * self.alpha * cs * T * ct.Kb)
         cs2 = cs * cs
         Logrho = np.log10(rho)
 
@@ -456,7 +457,7 @@ class SirkoAGN:
             self.cs[self.i] = cs
             self.T[self.i] = T
 
-        Ppgas = (ct.Kb / ct.massU) * T / cs2
+        Ppgas = (ct.Kb / self.mgas) * T / cs2
         PPrad = tauV * ct.sigmaSB / (2 * ct.c) * Teff4 / (rho * cs2)
 
         # Rewritten as dimensionless, dividing by cs2
@@ -499,7 +500,7 @@ class SirkoAGN:
         else:
             rho = self.rho[self.i]
             Mdotprime = self.Mdot * (1 - (self.Rmin / self.R[self.i]) ** 0.5)
-            self.cs[self.i] = cs = Mdotprime * Omega * Omega * ct.massU / (6 * np.pi * self.alpha * rho * ct.Kb * T)
+            self.cs[self.i] = cs = Mdotprime * Omega * Omega * self.mgas / (6 * np.pi * self.alpha * rho * ct.Kb * T)
             self.h[self.i] = cs/Omega
 
         Logrho = np.log10(rho)
@@ -508,7 +509,7 @@ class SirkoAGN:
         tauV = kappa * rho * cs / Omega
 
         cs2 = cs * cs
-        Ppgas = (ct.Kb / ct.massU) * T / cs2
+        Ppgas = (ct.Kb / self.mgas) * T / cs2
         PPrad = tauV * ct.sigmaSB / (2 * ct.c) * Teff4 / (rho * cs2)
 
         # Rewritten as dimensionless, dividing by cs2

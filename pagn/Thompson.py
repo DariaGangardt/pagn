@@ -73,6 +73,7 @@ class ThompsonAGN:
         self.epsilon = epsilon
         self.m = m
         self.X = X
+        self.mgas = ct.mproton/(2*X)
         self.xi = xi
 
         self.Rs = 2 * self.Mbh * ct.G / ct.c ** 2
@@ -583,7 +584,7 @@ class ThompsonAGN:
         Rr = T4ratio * opacfac
         zero_radiation = Rr - 1
         press_factor = rho * h * h * Omega * Omega
-        Pa = ct.Kb * T / (ct.massU * h * h * Omega * Omega)
+        Pa = ct.Kb * T / (self.mgas * h * h * Omega * Omega)
         Pb = ct.sigmaSB * Teff4 * tauV / (ct.c * press_factor)
         zero_pressure = Pa + Pb - 1
         sols = np.array([zero_pressure, zero_radiation])
@@ -634,7 +635,7 @@ class ThompsonAGN:
         T4 = T * T * T * T
         Teff4 = T4 / opacfac
 
-        factorT = T * ct.Kb / ct.massU
+        factorT = T * ct.Kb / self.mgas
         zero_pressure = 1 + 2 * h * eta * Omega * self.epsilon * ct.c * (
                 tauV / 2 + self.xi) / factorT - h * h * Omega * Omega / factorT
 
