@@ -282,8 +282,7 @@ class SirkoAGN:
             ax[3].set_xlabel(r"$\log_{10}{R \, [R_S]}$")
             for a in ax:
                 a.axvline(np.log10(self.R_AGN / self.Rs), -100, 100)
-
-        elif set(params).issubset(all_params):
+        elif set(params).issubset(all_params) and len(params) > 1:
             f, ax = plt.subplots(len(params), 1, figsize=(10, 10 + int(len(params)) * (2 / 3)), sharex=True,
                                  gridspec_kw=dict(hspace=0), tight_layout=True)
             ax[-1].set_xlabel(r"$\log_{10}{R \, [R_S]}$")
@@ -291,7 +290,11 @@ class SirkoAGN:
                 ax[i_param].plot(np.log10(self.R / self.Rs), param_dic[param][1])
                 ax[i_param].set_ylabel(param_dic[param][0])
                 ax[i_param].axvline(np.log10(self.R_AGN / self.Rs), -100, 100)
-
+        elif len(params) == 1:
+            f, ax = plt.subplots(figsize=(10, 5), tight_layout=True)
+            ax.set_xlabel(r"$\log_{10}{R \, [R_S]}$")
+            ax.plot(np.log10(self.R / self.Rs), param_dic[params[0]][1])
+            ax.set_ylabel(param_dic[params[0]][0])
         plt.show()
 
     def plot_roots_no_star(self, guess=None, zoomguess=False):

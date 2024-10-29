@@ -381,8 +381,12 @@ class ThompsonAGN:
             ax[3].set_xlabel(r"$\log_{10}{R \, [R_S]}$")
             for a in ax:
                 a.axvline(np.log10(self.R_AGN / self.Rs), -100, 100)
-
-        elif set(params).issubset(all_params):
+                all_params = ['h', 'rho', 'tau', 'T']
+                param_dic = {'h': [r"$\log_{10}{h/r}$", np.log10(self.h / self.R)],
+                             'rho': [r"$\log_{10}{\rho \, [\mathrm{g cm^{-3}}]}$", np.log10(self.rho * ct.SI_to_gcm3)],
+                             'tau': [r"$\log_{10}{\tau}$", np.log10(self.tauV)],
+                             'T': [r"$\log_{10}{T \, [\mathrm{K}]}$", np.log10(self.T)], }
+        elif set(params).issubset(all_params) and len(params) > 1:
             f, ax = plt.subplots(len(params), 1, figsize=(10, 10 + int(len(params)) * (2 / 3)), sharex=True,
                                  gridspec_kw=dict(hspace=0), tight_layout=True)
             ax[-1].set_xlabel(r"$\log_{10}{R \, [R_S]}$")
@@ -390,7 +394,11 @@ class ThompsonAGN:
                 ax[i_param].plot(np.log10(self.R / self.Rs), param_dic[param][1])
                 ax[i_param].set_ylabel(param_dic[param][0])
                 ax[i_param].axvline(np.log10(self.R_AGN / self.Rs), -100, 100)
-
+        elif len(params) == 1:
+            f, ax = plt.subplots(figsize=(10, 5), tight_layout=True)
+            ax.set_xlabel(r"$\log_{10}{R \, [R_S]}$")
+            ax.plot(np.log10(self.R / self.Rs), param_dic[params[0]][1])
+            ax.set_ylabel(param_dic[params[0]][0])
         plt.show()
 
     def plot_mdot(self):
